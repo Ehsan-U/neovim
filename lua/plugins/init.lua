@@ -69,7 +69,7 @@ return {
     'numToStr/Comment.nvim',
     config = function ()
       require("Comment").setup()
-    end
+    end,
   },
   
   {
@@ -80,7 +80,18 @@ return {
         require("nvim-surround").setup({
             -- Configuration here, or leave empty to use defaults
         })
-    end
+    end,
+  },
+  
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = {
+       "Myzel394/jsonfly.nvim",
+    },
+    keys = require("configs.jsonfly").keys,
+    config = function ()
+      require("telescope").load_extension("jsonfly")
+    end,
   },
 
   {
