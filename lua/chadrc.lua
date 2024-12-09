@@ -14,4 +14,21 @@ M.base46 = {
 	-- },
 }
 
+M.options = {
+	foldmethod = "expr",
+	foldexpr = "nvim_treesitter#foldexpr()",
+	foldenable = false,
+	foldlevel = 99,
+ }
+ 
+ vim.api.nvim_create_autocmd("FileType", {
+	pattern = "json",
+	callback = function()
+	   vim.opt_local.foldmethod = "expr"
+	   vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
+	   vim.opt_local.foldenable = false -- Folds are not active by default
+	end,
+ })
+ 
+
 return M
