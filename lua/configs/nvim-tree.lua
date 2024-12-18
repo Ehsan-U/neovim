@@ -21,6 +21,7 @@ require("nvim-tree").setup({
   },
   filters = {
     dotfiles = true,
+    custom = {"__pycache__"},
   },
   git = {
     enable = true,
