@@ -11,7 +11,6 @@ local options = {
         "vim",
         "vimdoc",
         "yaml",
-        "go",
         "json",
     },
 
