@@ -12,6 +12,7 @@ local options = {
         "vimdoc",
         "yaml",
         "json",
+        "go",
     },
 
     highlight = {
