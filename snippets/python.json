@@ -1,0 +1,137 @@
+{
+	"Set Full ID": {
+		"prefix": "fullid",
+		"body": "item['_id'] = item['_id'] + \"_full\""
+	},
+	"User Agent": {
+		"prefix": "mozila",
+		"body": "\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\","
+	},
+	"Excluded paths": {
+		"prefix": "excluded_paths",
+		"body": [
+			"if any([path in link for path in self.excluded_paths]):",
+            "    continue"
+		]
+	},
+	"Allowed domain scrapy": {
+		"prefix": "allowed_domains",
+		"body": [
+			"allowed_domains = [\"\"]"
+		],
+		"description": "Allowed domain for scrapy"
+	},
+	"Enable impersonate": {
+		"prefix": "impersonate",
+		"body": [
+			"\"IMPERSONATE_ENABLED\": True,"
+		],
+		"description": "Enable impersonate"
+	},
+	"use impersonate": {
+		"prefix": "chrome",
+		"body": [
+			"\"impersonate\": \"chrome\""
+		],
+		"description": "use impersonate"
+	},
+	"use zyte": {
+		"prefix": "zyte",
+		"body": [
+			"\"zyte_api_automap\": True"
+		],
+		"description": "use zyte"
+	},
+	"Scrapy Item Pipelines": {
+		"prefix": "pipelines",
+		"body": [
+		"ITEM_PIPELINES = {",
+		"    \"scrapy_zen.pipelines.PreProcessingPipeline\": 310,",
+		"    #    \"scrapy_zen.pipelines.DiscordPipeline\": 320,",
+		"    #    \"scrapy_zen.pipelines.SynopticPipeline\": 330,",
+		"    #    \"scrapy_zen.pipelines.TelegramPipeline\": 340,",
+		"    \"scrapy_zen.pipelines.GRPCPipeline\": 350,",
+		"    #    \"scrapy_zen.pipelines.WSPipeline\": 360,",
+		"    #    \"scrapy_zen.pipelines.HttpPipeline\": 370,",
+		"    \"scrapy_zen.pipelines.PostProcessingPipeline\": 380,",
+		"}"
+		],
+		"description": "Inserts a standard Scrapy ITEM_PIPELINES dictionary with common pipelines."
+	},
+	"Join Multiple Body": {
+		"prefix": "bjoin",
+		"body": [
+			"body = \"\\n\".join([html_text.extract_text(element.get()) for element in response.xpath(\"//div[@class='content']\")])"
+		],
+		"description": "Join multiple body content"
+	},
+	"Body Extract": {
+		"prefix": "bextract",
+		"body": [
+			"body = html_text.extract_text(response.xpath(\"\").get())"
+		],
+		"description": "extract body content"
+	},
+	"Scrapes Contract": {
+		"prefix": "@scrapes",
+		"body": "@scrapes _id _dt headline body link source"
+	},
+	"Scrapy RSS without body": {
+		"prefix": "rssfeed",
+		"body": [
+			"import os",
+			"import html_text",
+			"from scrapy.http import Request, Response ",
+			"import scrapy",
+			"from typing import Iterable, Dict",
+			"",
+			"",
+			"",
+			"class ${1:SpiderName}(scrapy.Spider):",
+			"    name = \"${2:spider_name}\"",
+			"    source = \"${3:https://www.example.com/}\"",
+			"    custom_settings = dict(",
+			"        IMPERSONATE_ENABLED=True,",
+			"    )",
+			"",
+			"",
+			"    def start_requests(self) -> Iterable[Request]:",
+			"        url = \"${4:https://feeds.example.com/feed}\"",
+			"        yield scrapy.Request(url, callback=self.parse)",
+			"",
+			"",
+			"    def parse(self, response: Response) -> Iterable[Dict]:",
+			"        \"\"\"",
+			"        @url ${4:https://feeds.example.com/feed}",
+			"        @scrapes _id _dt headline link source",
+			"        @returns requests 1",
+			"        \"\"\"",
+			"        for news in response.xpath(\"//item\"):",
+			"            item = {",
+			"                \"_id\": news.xpath(\"./link/text()\").get(),",
+			"                \"_dt\": news.xpath(\"./pubDate/text()\").get('').strip(\"+0000\").split(\",\")[-1],",
+			"                \"headline\": news.xpath(\"./title/text()\").get(),",
+			"                \"link\": news.xpath(\"./link/text()\").get(),",
+			"                \"source\": self.source",
+			"            } ",
+			"            if os.environ.get(\"SCRAPY_CHECK\"):",
+			"                yield item",
+			"            yield scrapy.Request(item['link'], callback=self.parse_news, cb_kwargs={\"item\": item}, meta={",
+			"                \"_id\": item['_id'],",
+			"                \"_dt\": item['_dt']",
+			"            })",
+			"",
+			"",
+			"    def parse_news(self, response: Response, item: Dict) -> Dict:",
+			"        \"\"\"",
+			"        @url ${5:https://www.example.com/sample-article}",
+			"        @cb_kwargs {\"item\": {}}",
+			"        @scrapes body",
+			"        @returns items 1",
+			"        \"\"\"",
+			"        item['body'] = html_text.extract_text(response.xpath(\"${6://article/div[@class='entry-content']}\").get())",
+			"        return item$0"
+		],
+		"description": "Scrapy spider template for RSS feeds without body content"
+	}
+}
